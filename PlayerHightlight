@@ -1,0 +1,60 @@
+local HighlightService = game:GetService("HighlightService")
+local players = game.Players
+local highlightOn = false
+
+-- Turn highlighting on and off
+function toggleHighlight()
+    highlightOn = not highlightOn
+
+    if highlightOn then
+        for _, player in ipairs(players:GetPlayers()) do
+            local torso = player.Character:FindFirstChild("HumanoidRootPart")
+
+            local highlight = HighlightService:CreateHighlight(torso)
+            highlight.Visible = true
+
+            -- Change the color of the highlight
+            highlight.Color = Color3.new(1, 0, 0)
+
+            -- Change the size of the highlight
+            highlight.Size = Vector3.new(1, 1, 1)
+        end
+    else
+        for _, player in ipairs(players:GetPlayers()) do
+            local torso = player.Character:FindFirstChild("HumanoidRootPart")
+
+            local highlight = torso:FindFirstChild("Highlight")
+            if highlight then
+                highlight:Destroy()
+            end
+        end
+    end
+end
+
+-- Highlight players when they join the game
+players.PlayerAdded:Connect(function(player)
+    if highlightOn then
+        local torso = player.Character:FindFirstChild("HumanoidRootPart")
+
+        local highlight = HighlightService:CreateHighlight(torso)
+        highlight.Visible = true
+
+        -- Change the color of the highlight
+        highlight.Color = Color3.new(1, 0, 0)
+
+        -- Change the size of the highlight
+        highlight.Size = Vector3.new(1, 1, 1)
+    end
+end)
+
+-- Remove highlighting when players leave the game
+players.PlayerRemoved:Connect(function(player)
+    if highlightOn then
+        local torso = player.Character:FindFirstChild("HumanoidRootPart")
+
+        local highlight = torso:FindFirstChild("Highlight")
+        if highlight then
+            highlight:Destroy()
+        end
+    end
+end)
